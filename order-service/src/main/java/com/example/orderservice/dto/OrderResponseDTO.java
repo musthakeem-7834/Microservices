@@ -3,13 +3,14 @@ package com.example.orderservice.dto;
 public class OrderResponseDTO {
 
     private Long orderId;
-    private UserDTO user;
+    private String product;
+    private Integer quantity;
+    private UserSummary user;
 
-    public OrderResponseDTO() {
-    }
-
-    public OrderResponseDTO(Long orderId, UserDTO user) {
+    public OrderResponseDTO(Long orderId, String product, Integer quantity, UserSummary user) {
         this.orderId = orderId;
+        this.product = product;
+        this.quantity = quantity;
         this.user = user;
     }
 
@@ -17,15 +18,15 @@ public class OrderResponseDTO {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public String getProduct() {
+        return product;
     }
 
-    public UserDTO getUser() {
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public UserSummary getUser() {
         return user;
-    }
-
-    public void setUser(UserDTO user) {
-        this.user = user;
     }
 }
