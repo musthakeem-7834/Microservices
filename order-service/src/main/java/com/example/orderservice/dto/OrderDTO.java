@@ -2,30 +2,31 @@ package com.example.orderservice.dto;
 
 public class OrderDTO {
 
-    private Long orderId;
+    private Long id;
+    private String product;
+    private Integer quantity;
     private Long userId;
 
-    public OrderDTO() {
-    }
-
-    public OrderDTO(Long orderId, Long userId) {
-        this.orderId = orderId;
+    public OrderDTO(Long id, String product, Integer quantity, Long userId) {
+        this.id = id;
+        this.product = product;
+        this.quantity = quantity;
         this.userId = userId;
     }
 
-    public Long getOrderId() {
-        return orderId;
+    public Long getId() {
+        return id;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
+    public String getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public Long getUserId() {
         return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 }

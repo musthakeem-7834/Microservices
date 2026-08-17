@@ -1,45 +1,24 @@
 package com.example.orderservice.controller;
 
-import com.example.orderservice.dto.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
+import com.example.orderservice.service.OrderService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/orders")
 public class OrderController {
 
-    private final RestTemplate restTemplate;
+    private final OrderService orderService;
 
-    public OrderController(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getOrder(@PathVariable Long id) {
+    @GetMapping("/api/orders/payment")
+    public String processPayment(
+            @RequestParam(defaultValue = "false") boolean slow,
+            @RequestParam(defaultValue = "false") boolean fail) {
 
-        // sample order
-        OrderDTO order = new OrderDTO(id, 1L);
-
-        try {
-            String userServiceUrl =
-                    "http://localhost:8081/api/users/" + order.getUserId();
-
-            UserDTO user = restTemplate.getForObject(userServiceUrl, UserDTO.class);
-
-            OrderResponseDTO response =
-                    new OrderResponseDTO(order.getOrderId(), user);
-
-            return ResponseEntity.ok(response);
-
-        } catch (HttpClientErrorException.NotFound ex) {
-            return ResponseEntity.status(404)
-                    .body("User not found in User Service");
-
-        } catch (Exception ex) {
-            return ResponseEntity.status(500)
-                    .body("Unable to connect to User Service");
-        }
+        return orderService.processOrder(slow, fail);
     }
 }

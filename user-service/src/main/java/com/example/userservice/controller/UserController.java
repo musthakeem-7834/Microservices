@@ -1,7 +1,9 @@
 package com.example.userservice.controller;
 
 import com.example.userservice.dto.UserDTO;
-import org.springframework.http.HttpStatus;
+
+import com.example.userservice.dto.UserResponse;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +22,20 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserResponse> getUser(@PathVariable Long id) {
 
         UserDTO user = USERS.get(id);
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(user);
+        UserResponse response = new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
