@@ -11,9 +11,12 @@ public class UserClient {
     private final RestClient restClient;
 
     public UserClient(
-            @Qualifier("userRestClient") RestClient restClient) {
+            @Qualifier("loadBalancedRestClientBuilder")
+            RestClient.Builder builder) {
 
-        this.restClient = restClient;
+        this.restClient = builder
+                .baseUrl("http://USER-SERVICE")
+                .build();
     }
 
     public UserSummary getUser(Long userId) {
