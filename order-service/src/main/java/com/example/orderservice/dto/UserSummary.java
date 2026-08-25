@@ -4,15 +4,13 @@ public class UserSummary {
 
     private Long id;
     private String name;
-    private String email;
 
     public UserSummary() {
     }
 
-    public UserSummary(Long id, String name, String email) {
+    public UserSummary(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.email = email;
     }
 
     public Long getId() {
@@ -31,11 +29,4 @@ public class UserSummary {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
