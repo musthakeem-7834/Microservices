@@ -10,7 +10,7 @@ public class ConfigController {
     @Value("${message}")
     private String message;
 
-    @GetMapping("/config/message")
+    @GetMapping("/config")
     public String getMessage() {
         return message;
     }

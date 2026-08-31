@@ -1,6 +1,7 @@
 package com.example.orderservice.client;
 
 import com.example.orderservice.dto.UserSummary;
+import com.example.orderservice.exception.UserServiceUnavailableException;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,37 +41,45 @@ public class UserClient {
         return circuitBreaker.run(
 
                 () -> {
-                    log.info("Calling USER-SERVICE...");
+
+                    log.info(
+                            "Calling USER-SERVICE for user {}",
+                            id
+                    );
 
                     UserSummary user = restClient.get()
                             .uri("/api/users/{id}", id)
                             .retrieve()
                             .body(UserSummary.class);
 
-                    log.info("USER-SERVICE success for user {}", id);
+                    if (user == null) {
+                        throw new UserServiceUnavailableException(
+                                "USER-SERVICE returned an empty response"
+                        );
+                    }
+
+                    log.info(
+                            "USER-SERVICE success for user {}",
+                            id
+                    );
 
                     return user;
                 },
 
                 throwable -> {
+
                     log.error(
                             "USER-SERVICE failed for user {}: {}",
                             id,
                             throwable.getMessage()
                     );
 
-                    return fallbackUser(id);
+                    throw new UserServiceUnavailableException(
+                            "USER-SERVICE is currently unavailable"
+                    );
                 }
         );
     }
-
-    private UserSummary fallbackUser(Long id) {
-
-        log.warn("Fallback executed for user {}", id);
-
-        return new UserSummary(
-                id,
-                "User temporarily unavailable"
-        );
-    }
+    
+    
 }
